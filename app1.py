@@ -3,6 +3,7 @@ import pandas as pd
 import joblib
 import shap
 from streamlit_shap import st_shap
+import matplotlib.pyplot as plt
 
 if 'language' not in st.session_state:
     st.session_state.language = 'en'  
