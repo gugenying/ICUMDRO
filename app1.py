@@ -115,18 +115,17 @@ if st.button(t["predict_button"]):
         shap_values = explainer.shap_values(processed_data)
         
         # Display SHAP explanation
-        st.subheader(t["model_explanation"])
-        st_shap(
-            shap.force_plot(
-                base_value=explainer.expected_value,
-                shap_values=shap_values,
-                features=processed_data,
-                feature_names=feature_names,
-                matplotlib=True
-            ),
-            height=100,
-            width=400
+        fig, ax = plt.subplots(figsize=(10, 2))  # 调整宽高，例如 10x2
+        shap.force_plot(
+            explainer.expected_value,
+            shap_values,
+            features=processed_data,
+            feature_names=feature_names,
+            matplotlib=True,
+            show=False,  # 不直接展示
+            ax=ax  # 使用自定义 Axes
         )
+
         
     except Exception as e:
         st.error(f"{t['error']}: {str(e)}")
