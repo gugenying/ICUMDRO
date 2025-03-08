@@ -124,8 +124,8 @@ if st.button(t["predict_button"]):
                 feature_names=feature_names,
                 matplotlib=True
             ),
-            height=500,
-            width=1900
+            height=100,
+            width=400
         )
         
     except Exception as e:
