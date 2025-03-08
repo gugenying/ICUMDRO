@@ -3,7 +3,6 @@ import pandas as pd
 import joblib
 import shap
 from streamlit_shap import st_shap
-import matplotlib.pyplot as plt
 
 if 'language' not in st.session_state:
     st.session_state.language = 'en'  
@@ -116,18 +115,32 @@ if st.button(t["predict_button"]):
         shap_values = explainer.shap_values(processed_data)
         
         # Display SHAP explanation
-        fig, ax = plt.subplots(figsize=(10, 2))  # 调整宽高，例如 10x2
-        shap.force_plot(
-            explainer.expected_value,
-            shap_values,
+        st.subheader(t["model_explanation"])
+        shap_plot = shap.force_plot(
+            base_value=explainer.expected_value,
+            shap_values=shap_values,
             features=processed_data,
             feature_names=feature_names,
-            matplotlib=True,
-            show=False,  # 不直接展示
-            ax=ax  # 使用自定义 Axes
+            matplotlib=False  # 使用HTML组件
         )
+        st.markdown("""
+        <style>
+        .shap-container {
+            max-width: 100%;
+            overflow-x: auto;
+            margin: 0 auto;
+        }
+        </style>
+        """, unsafe_allow_html=True)
 
-        
+        # 在容器中显示图表
+        with st.markdown('<div class="shap-container">', unsafe_allow_html=True):
+            st_shap(
+                shap_plot,
+                height=400,  # 适当降低高度
+                width=1200   # 设置稍大于常规屏幕宽度的尺寸
+            )
+        st.markdown('</div>', unsafe_allow_html=True)
     except Exception as e:
         st.error(f"{t['error']}: {str(e)}")
         raise e
